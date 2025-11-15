@@ -1,0 +1,35 @@
+trigger:
+  - main   # change to your branch name
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  # Use Node.js 18 (stable for most Next.js versions)
+  - task: UseNode@1
+    inputs:
+      version: '18.x'
+    displayName: 'Use Node.js 18'
+
+  # Install dependencies
+  - script: |
+      npm install
+    displayName: 'Install npm packages'
+
+  # Build the Next.js app
+  - script: |
+      npm run build
+    displayName: 'Build Next.js project'
+
+  # Optional: If you want to export static build (for next export)
+  # - script: |
+  #     npm run export
+  #   displayName: 'Export static site'
+
+  # Publish build artifacts (optional but recommended)
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: '.next'
+      ArtifactName: 'next-build'
+      publishLocation: 'Container'
+    displayName: 'Publish build output'
